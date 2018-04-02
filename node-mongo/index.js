@@ -1,6 +1,8 @@
 const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
 
+const dboper = require('./operations');
+
 const url = 'mongodb://localhost:27017/conFusion';
 
 MongoClient.connect(url, (err, db) => {
@@ -9,26 +11,15 @@ MongoClient.connect(url, (err, db) => {
 
     console.log('Connected correctly to server');
 
-    const collection = db.collection("dishes");
-    collection.insertOne({"name": "Uthappizza", "description": "test"},
-    (err, result) => {
-        assert.equal(err,null);
-
-        console.log("After Insert:\n");
-        console.log(result.ops);
-
-        collection.find({}).toArray((err, docs) => {
-            assert.equal(err,null);
-            
-            console.log("Found:\n");
-            console.log(docs);
-
-            db.dropCollection("dishes", (err, result) => {
-                assert.equal(err,null);
-
-                db.close();
-            });
-        });
-    });
+    dboper.insertDocument(db, {  name: "Prato Novo", description: "Delicioso"}, "dishes", (result) => {
+        console.log("Inseriu documento: \n" , result.ops);
+        dboper.findDocument(db, "dishes", (docs) => {
+            console.log("Encontrou documentos:\n",docs);
+            dboper.updateDocument(db, {  name: "Prato Novo" },{ description: "Novo Delicioso"}, "dishes", 
+                (result) => {
+                    console.log("Alterou documentos:\n", result.result);
+                })
+        }) 
+    })
 
 });
