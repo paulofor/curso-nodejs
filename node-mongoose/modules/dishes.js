@@ -1,20 +1,41 @@
 const moongose = require('mongoose');
 const Schema = moongose.Schema;
 
+const commentSchema = new Schema({
+    rating: {
+        type: Number,
+        min: 1,
+        max: 5,
+        required: true
+    },
+    comment: {
+        type: String,
+        required: true
+    },
+    author: {
+        type: String,
+        required: true
+    }
+}, {
+        timestamps: true
+    }
+);
+
 const dishSchema = new Schema({
     name: {
         type: String,
         required: true,
-        unique:true
+        unique: true
     },
     description: {
         type: String,
         required: true
-
+    },
+    comments: [commentSchema]
+}, {
+        timestamps: true
     }
-},{
-    timestamps: true
-});
+);
 
 var Dishes = moongose.model('Dish', dishSchema);
 
