@@ -21,21 +21,36 @@ userRouter.post('/signup', function (req, res, next) {
         res.json({ err: err })
       }
       else {
-        passport.authenticate('local')(req, res, () => {
-          res.statusCode = 200;
-          res.setHeader('Content-Type', 'application/json');
-          res.json({success: true,  status: "Registrado com sucesso" });
-        });
+        if (req.body.firstname) {
+          user.firstname = req.body.firstname;
+        }
+        if (req.body.lastname) {
+          user.lastname = req.body.lastname;
+        }
+        user.save((err, user) => {
+          if (err) {
+            res.statusCode = 500;
+            res.setHeader('Content-Type', 'application/json');
+            res.json({ err: err });
+            return;
+          }
+          passport.authenticate('local')(req, res, () => {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json({ success: true, status: "Registrado com sucesso" });
+          });
+        })
+
       }
     });
 });
 
-userRouter.post('/login',passport.authenticate('local'), (req, res) => {
+userRouter.post('/login', passport.authenticate('local'), (req, res) => {
   var token = authenticate.getToken({ id: req.user._id });
 
   res.statusCode = 200;
   res.setHeader('Content-Type', 'application/json');
-  res.json({success: true,  status: "Você está logado" , token: token});
+  res.json({ success: true, status: "Você está logado", token: token });
 });
 
 userRouter.get('/logout', (req, res) => {
