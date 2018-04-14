@@ -15,6 +15,7 @@ var userRouter = require('./routes/users');
 var dishRouter = require('./routes/dishRouter');
 var leaderRouter = require('./routes/leaderRouter');
 var promocaoRouter = require('./routes/promocaoRouter');
+var uploadRouter = require('./routes/uploadRouter');
 
 const mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
@@ -28,6 +29,7 @@ connect.then((db) => {
 
 var app = express();
 
+/*
 app.all('*' , (req, res, next) => {
   if (req.secure) {
     return next();
@@ -35,6 +37,8 @@ app.all('*' , (req, res, next) => {
     res.redirect(307, 'https://' + req.hostname + ':' + app.get('secPort') + req.url); 
   }
 })
+*/
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -57,6 +61,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/dishes', dishRouter);
 app.use('/leaders', leaderRouter);
 app.use('/promotions', promocaoRouter);
+app.use('/imageUpload', uploadRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
