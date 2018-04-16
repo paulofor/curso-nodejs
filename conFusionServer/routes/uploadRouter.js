@@ -4,6 +4,8 @@ const bodyParser = require('body-parser');
 const authenticate = require('../authenticate');
 const multer = require('multer');
 
+const cors = require('./cors');
+
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null,'public/images');
@@ -29,6 +31,9 @@ const uploadRouter = express.Router();
 uploadRouter.use(bodyParser.json());
 
 uploadRouter.route('/') 
+.options(cors.corsWithOptions, (req, res) => {
+    res.sendStatus(200);
+})
 .post(authenticate.verifyUser, upload.single('imageFile'),  (req, res) => {
     res.statusCode = 200;
     res.setHeader('Content-Type','application/json');

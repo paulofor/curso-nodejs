@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 
 const leaderRouter = express.Router();
 const authenticate = require('../authenticate');
+const cors = require('./cors');
 
 leaderRouter.use(bodyParser.json());
 
@@ -12,35 +13,38 @@ leaderRouter.route('/')
     res.setHeader('Content-Type','text/plain');
     next();
 })
-.get(authenticate.verifyUser,(req,res,next) => {
+.options(cors.corsWithOptions, (req, res) => {
+    res.sendStatus(200);
+})
+.get(cors.corsWithOptions, authenticate.verifyUser,(req,res,next) => {
     res.end('Em breve leaders serão lançados...');
 })
-.post(authenticate.verifyUser, (req,res,next) => {
+.post(cors.corsWithOptions, authenticate.verifyUser, (req,res,next) => {
     res.end('Vou adicionar o leader: ' + req.body.name + 
         ' com os detalhes: ' + req.body.description);
 })
-.put(authenticate.verifyUser, (req,res,next) => {
+.put(cors.corsWithOptions, authenticate.verifyUser, (req,res,next) => {
     res.statusCode = 403;
     res.end('PUT não suportado ');
 })
-.delete(authenticate.verifyUser, (req,res,next) => {
+.delete(cors.corsWithOptions, authenticate.verifyUser, (req,res,next) => {
     res.end('Em breve leaders serão apagados...');
 });
 
 leaderRouter.route('/:Id')
-.get((req,res,next) => {
+.get(cors.cors, (req,res,next) => {
     res.end('Em breve leaders serão lançados para: ' + req.params.Id);
 })
-.post(authenticate.verifyUser, (req,res,next) => {
+.post(cors.corsWithOptions, authenticate.verifyUser, (req,res,next) => {
     res.statusCode = 403;
     res.end('POST não suportado para um id (' + req.params.Id + ')');
 })
-.put(authenticate.verifyUser, (req,res,next) => {
+.put(cors.corsWithOptions, authenticate.verifyUser, (req,res,next) => {
     res.write('Vai atualizar id: ' + req.params.Id);
     res.end('Vou alterar o leaders: ' + req.body.name + 
     ' com os detalhes: ' + req.body.description);
 })
-.delete(authenticate.verifyUser, (req,res,next) => {
+.delete(cors.corsWithOptions, authenticate.verifyUser, (req,res,next) => {
     res.end('Em breve leaders será apagado id: ' + req.params.Id);
 });
 

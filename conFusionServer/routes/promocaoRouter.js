@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 
 const promocaoRouter = express.Router();
 const authenticate = require('../authenticate');
-
+const cors = require('./cors');
 
 promocaoRouter.use(bodyParser.json());
 
@@ -13,7 +13,10 @@ promocaoRouter.route('/')
         res.setHeader('Content-Type', 'text/plain');
         next();
     })
-    .get((req, res, next) => {
+    .options(cors.corsWithOptions, (req, res) => {
+        res.sendStatus(200);
+    })
+    .get(cors.cors,(req, res, next) => {
         res.end('Em breve promocoes serão lançados...');
     })
     .post(authenticate.verifyUser, (req, res, next) => {
@@ -29,7 +32,10 @@ promocaoRouter.route('/')
     });
 
 promocaoRouter.route('/:Id')
-    .get((req, res, next) => {
+    .options(cors.corsWithOptions, (req, res) => {
+        res.sendStatus(200);
+    })
+    .get(cors.cors,(req, res, next) => {
         res.end('Em breve promocoes serão lançados para: ' + req.params.Id);
     })
     .post(authenticate.verifyUser, (req, res, next) => {
