@@ -16,7 +16,7 @@ var fs = require('fs');
 
 var port = normalizePort(process.env.PORT || '3232');
 app.set('port', port);
-app.set('portSec', port + 443); // 3675
+app.set('portSec', 443); // 3675
 
 /**
  * Create HTTP server.
@@ -32,10 +32,13 @@ server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
-/*
+//cert-key-20180417-192553.p12
+//cert-20180417-192553.crt
+//key-20180417-192553.pem
+
 var options = {
-  key: fs.readFileSync(__dirname,'/www.example.com.key'),
-  cert: fs.readFileSync(__dirname,'/www.example.com.cert')
+  key: fs.readFileSync(__dirname,'/key-20180417-192553.pem'),
+  cert: fs.readFileSync(__dirname,'/cert-key-20180417-192553.p12')
 };
 
 var secureServer = https.createServer(options, app);
@@ -44,7 +47,7 @@ secureServer.listen(app.get('portSec'), () => {
 });
 secureServer.on('error', onError);
 secureServer.on('listening', onListening);
-*/
+
 
 /**
  * Normalize a port into a number, string, or false.

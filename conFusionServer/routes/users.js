@@ -65,4 +65,14 @@ userRouter.get('/logout', (req, res) => {
   }
 })
 
+
+userRouter.get('/facebook/token', passport.authenticate('facebook-token'), (req, res ) => {
+  if (req.user) {
+    var token = authenticate.getToken({ id: req.user._id });
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.json({ success: true, status: "Você está logado", token: token });
+  }
+})
+
 module.exports = userRouter;
