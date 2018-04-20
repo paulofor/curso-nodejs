@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const promocaoRouter = express.Router();
 const authenticate = require('../authenticate');
 const cors = require('./cors');
+const Promotions = require('../modules/promotions');            
 
 promocaoRouter.use(bodyParser.json());
 
@@ -16,9 +17,16 @@ promocaoRouter.route('/')
     .options(cors.corsWithOptions, (req, res) => {
         res.sendStatus(200);
     })
-    .get(cors.cors,(req, res, next) => {
-        res.end('Em breve promocoes serão lançados...');
+    .get(cors.corsWithOptions ,(req, res, next) => {
+        Promotions.find(req.query)
+        .then((promotions) => {
+            res.statusCode = 200;
+            res.setHeader('Content-Type','application/json');
+            res.json(promotions);
+        }, (err) => next(err))
+        .catch((err) => next(err));
     })
+
     .post(authenticate.verifyUser, (req, res, next) => {
         res.end('Vou adicionar o promocao: ' + req.body.name +
             ' com os detalhes: ' + req.body.description);

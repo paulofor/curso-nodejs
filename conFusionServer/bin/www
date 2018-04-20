@@ -36,12 +36,15 @@ server.on('listening', onListening);
 //cert-20180417-192553.crt
 //key-20180417-192553.pem
 
+/*
 var options = {
   key: fs.readFileSync(__dirname,'/key-20180417-192553.pem'),
   cert: fs.readFileSync(__dirname,'/cert-key-20180417-192553.p12')
 };
+*/
 
-var secureServer = https.createServer(options, app);
+//var secureServer = https.createServer(options, app);
+var secureServer = https.createServer(app);
 secureServer.listen(app.get('portSec'), () => {
   console.log('Servidor seguro escutando na porta ' , app.get('portSec'));
 });

@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const leaderRouter = express.Router();
 const authenticate = require('../authenticate');
 const cors = require('./cors');
+const Leaders = require('../modules/leaders');
 
 leaderRouter.use(bodyParser.json());
 
@@ -16,8 +17,14 @@ leaderRouter.route('/')
 .options(cors.corsWithOptions, (req, res) => {
     res.sendStatus(200);
 })
-.get(cors.corsWithOptions, authenticate.verifyUser,(req,res,next) => {
-    res.end('Em breve leaders serão lançados...');
+.get(cors.corsWithOptions ,(req, res, next) => {
+    Leaders.find(req.query)
+    .then((promotions) => {
+        res.statusCode = 200;
+        res.setHeader('Content-Type','application/json');
+        res.json(promotions);
+    }, (err) => next(err))
+    .catch((err) => next(err));
 })
 .post(cors.corsWithOptions, authenticate.verifyUser, (req,res,next) => {
     res.end('Vou adicionar o leader: ' + req.body.name + 

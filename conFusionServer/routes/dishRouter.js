@@ -18,7 +18,7 @@ dishRouter.route('/')
         res.sendStatus(200);
     })
     .get(cors.cors, (req, res, next) => {
-        Dishes.find({})
+        Dishes.find(req.query)
             .populate('comments.author')
             .then((dishes) => {
                 res.statusCode = 200;
@@ -122,9 +122,14 @@ dishRouter.route('/:dishId/comments')
                     dish.comments.push(req.body);
                     dish.save()
                         .then((dish) => {
-                            res.statusCode = 200;
-                            res.setHeader('Content-Type', 'application/json');
-                            res.json(dish);
+                            Dishes.findById(dish._id)
+                            .populate('comments.author')
+                            .then((dish) => {
+                                res.statusCode = 200;
+                                res.setHeader('Content-Type', 'application/json');
+                                res.json(dish); 
+                            })
+  
                         }, (err) => next(err));
 
                 } else {
@@ -209,9 +214,14 @@ dishRouter.route('/:dishId/comments/:commentId')
                     }
                     dish.save()
                         .then((dish) => {
-                            res.statusCode = 200;
-                            res.setHeader('Content-Type', 'application/json');
-                            res.json(dish);
+                            Dishes.findById(dish._id)
+                            .populate('comments-author')
+                            .then((dish) => {
+                                res.statusCode = 200;
+                                res.setHeader('Content-Type', 'application/json');
+                                res.json(dish);
+                            })
+                        
                         }, (err) => next(err));
                 } else if (dish == null) {
                     err = new Error('Dish ' + req.params.dishId + " não existe");
@@ -235,9 +245,14 @@ dishRouter.route('/:dishId/comments/:commentId')
 
                     dish.save()
                         .then((dish) => {
-                            res.statusCode = 200;
-                            res.setHeader('Content-Type', 'application/json');
-                            res.json(dish);
+                            Dishes.findById(dish._id)
+                            .populate('comments-author')
+                            .then((dish) => {
+                                res.statusCode = 200;
+                                res.setHeader('Content-Type', 'application/json');
+                                res.json(dish);
+                            })
+                    
                         }, (err) => next(err));
 
 
